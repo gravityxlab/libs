@@ -7,9 +7,9 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-  // origin: 'http://localhost:3000',
-  // methods: ['GET', 'POST'],
-  // credentials: true,
+  origin: 'http://localhost:8081',
+  methods: ['GET', 'POST'],
+  credentials: true,
 }
 
 const server = createServer(app);
@@ -40,7 +40,7 @@ const db = {
 };
 
 io.on('connection', (socket) => {
-  socket.emit('eth:price-history', db.data.slice(-300));
+  socket.emit('eth:price-history', db.data);
 });
 
 const tickRate = 50;

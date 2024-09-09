@@ -1,10 +1,10 @@
-import Axis from './Axis';
-import { ms, getTimeSlot } from '../../time';
+import { Axis } from './Axis';
+import { ms, format, getTimeSlot } from '../../time';
 import { text } from '../../canvas';
 
-class AxisBottom extends Axis {
-  constructor(chart, unit) {
-    super(chart, unit);
+export class AxisBottom extends Axis {
+  constructor(chart) {
+    super(chart, chart.settings.xAxis.unit);
 
     this.left = 0;
     this.height = this.chart.padding.bottom;
@@ -22,8 +22,11 @@ class AxisBottom extends Axis {
     this.chart.ctx.moveTo(this.left, this.top);
     this.chart.ctx.lineTo(this.width, this.top);
     this.chart.ctx.stroke();
-    this.tickInterval = ms('15m');
-    this.tickSize = Math.floor((this.width - 50 ) / 8);
+    this.tickInterval = this.chart.settings.xAxis.interval || ms('15m');
+    this.tickIntervalCount = this.chart.settings.xAxis.tickIntervalCount;
+    this.tickSizeUnit = 6;
+    this.tickCount = Math.ceil(this.chart.innerWidth / (this.tickIntervalCount * this.tickSizeUnit));
+    this.tickSize = this.tickIntervalCount * this.tickSizeUnit;
 
     this.ticks = [];
   }
@@ -41,18 +44,18 @@ class AxisBottom extends Axis {
     const oldest = dataStash.oldest;
     const latest = dataStash.latest;
     const range = {
-      start: getTimeSlot(new Date(oldest[this.unit]), ms('15m')).start,
-      end: getTimeSlot(new Date(latest[this.unit]), ms('15m')).end
+      start: getTimeSlot(new Date(oldest[this.unit]), this.tickInterval).start,
+      end: getTimeSlot(new Date(latest[this.unit]), this.tickInterval).end
     };
 
     const values = [range.end];
 
-    while (values[0] - ms('15m') >= range.start && values.length <= 8) {
-      values.unshift(values[0] - ms('15m'));
+    while (values[0] - this.tickInterval >= range.start && values.length <= this.tickCount) {
+      values.unshift(values[0] - this.tickInterval);
     };
 
-    while (values.length <= 8) {
-      values.push(values[values.length - 1] + ms('15m'));
+    while (values.length <= this.tickCount) {
+      values.push(values[values.length - 1] + this.tickInterval);
     }
 
     this.benchmark.value = values[values.length - 2];
@@ -66,7 +69,7 @@ class AxisBottom extends Axis {
     this.ticks = values.map((value) => {
       const date = new Date(value);
       return {
-        label: `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`,
+        label: this.chart.settings.xAxis.label(date),
         value: date.getTime(),
         x: this.x(value),
         y: this.top + 20,
@@ -78,5 +81,3 @@ class AxisBottom extends Axis {
     });
   }
 }
-
-export default AxisBottom;

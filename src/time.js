@@ -41,3 +41,33 @@ export function getTimeSlot(date, interval = ms('15m')) {
       end: endTimestamp
   };
 }
+
+export function getTimeSlotTimestamp(date, interval = ms('15m')) {
+  const { start, end } = getTimeSlot(date, interval);
+
+  return {
+    start,
+    end,
+    timestamp: start + ((end - start) / 2),
+  };
+}
+
+export function format(date, pattern) {
+  if (pattern.includes('MM')) {
+    pattern = pattern.replace(/MM/g, String(date.getMonth() + 1).padStart(2, '0'));
+  }
+
+  if (pattern.includes('DD')) {
+    pattern = pattern.replace(/DD/g, String(date.getDate()).padStart(2, '0'));
+  }
+
+  if (pattern.includes('HH')) {
+    pattern = pattern.replace(/HH/g, String(date.getHours()).padStart(2, '0'));
+  }
+
+  if (pattern.includes('mm')) {
+    pattern = pattern.replace(/mm/g, String(date.getMinutes()).padStart(2, '0'));
+  }
+
+  return pattern;
+}

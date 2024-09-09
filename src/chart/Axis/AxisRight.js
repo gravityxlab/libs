@@ -1,10 +1,9 @@
-import Axis from './Axis';
-import { lowHigh } from '../../array';
+import { Axis } from './Axis';
 import { text } from '../../canvas';
 
-class AxisRight extends Axis {
+export class AxisRight extends Axis {
   constructor(chart, unit) {
-    super(chart, unit);
+    super(chart, chart.settings.yAxis.unit);
 
     this.top = 0;
     this.width = this.chart.padding.right;
@@ -34,10 +33,12 @@ class AxisRight extends Axis {
     this.chart.ctx.moveTo(this.left, this.top);
     this.chart.ctx.lineTo(this.left, this.height);
     this.chart.ctx.moveTo(this.left, this.chart.axisBottom.top);
-    this.chart.ctx.lineTo(this.chart.$el.width, this.chart.axisBottom.top);
+    this.chart.ctx.lineTo(this.chart.width, this.chart.axisBottom.top);
     this.chart.ctx.stroke();
 
-    const [low, high] = lowHigh(data, this.unit);
+    const lowHigh = this.chart.dataStash.helpers.lowHigh(data);
+    const low = Math.floor(lowHigh[0] / 20) * 20;
+    const high = Math.ceil(lowHigh[1] / 20) * 20;
 
     this.benchmark.value = high;
 
@@ -62,5 +63,3 @@ class AxisRight extends Axis {
     this.ticks = ticks;
   }
 }
-
-export default AxisRight;

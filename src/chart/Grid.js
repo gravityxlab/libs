@@ -6,8 +6,8 @@ class Grid {
   draw(axisBottom, axisRight) {
     this.left = 0;
     this.top = 0;
-    this.width = this.chart.$el.width - axisRight.width - 1;
-    this.height = this.chart.$el.height - axisBottom.height - 1;
+    this.width = this.chart.width - axisRight.width - 1;
+    this.height = this.chart.height - axisBottom.height - 1;
 
     this.chart.ctx.clearRect(this.left, this.top, this.width, this.height);
     this.chart.ctx.beginPath();
@@ -30,4 +30,4 @@ class Grid {
   }
 }
 
-export default Grid;
+export { Grid };

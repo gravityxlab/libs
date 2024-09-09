@@ -1,7 +1,13 @@
 {
   "name": "@gravityxlab/libs",
   "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
   "description": "To make it easier for GravityX Lab to share and consume our own JavaScript.",
-  "main": "index.js",
-  "private": true
+  "main": "src/index.js",
+  "types": "src/index.d.ts", 
+  "files": [
+    "src/",
+    "README.md"
+  ]
 }
