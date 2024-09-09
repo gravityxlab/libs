@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart</title>
+</head>
+<body class="flex flex-col items-center p-2 bg-[#1B1D23] text-white">
+  <div class="w-[500px] border border-[#2B3139]">
+      <div class="flex items-center px-4 py-3 border-b border-[#2B3139]">
+        <h1 class="text-xl font-medium">ETH/USDT</h1>
+        <div id="price" class="text-xl ml-1"></div>
+      </div>
+      <div class="flex items-center h-10 px-4 border-b border-[#2B3139]">
+        <button data-interval="time" class="opacity-20 cursor-pointer text-xs font-medium mr-4">Time</button>
+        <button data-interval="1d" class="opacity-20 cursor-pointer text-xs font-medium mr-4">1D</button>
+        <button data-interval="3d" class="opacity-20 cursor-pointer text-xs font-medium mr-4">3D</button>
+        <button data-interval="1w" class="opacity-20 cursor-pointer text-xs font-medium mr-4">1W</button>
+        <button data-interval="1m" class="opacity-20 cursor-pointer text-xs font-medium">1M</button>
+      </div>
+      <canvas id="canvas"></canvas>
+  </div>
+  
+</body>
+</html>

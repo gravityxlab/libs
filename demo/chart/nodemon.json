@@ -1,0 +1,5 @@
+{
+  "ext": "js,json",
+  "ignore": ["node_modules", "webpack-dev-server.js"],
+  "exec": "NODE_ENV=development node server/index.js"
+}
