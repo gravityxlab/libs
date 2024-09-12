@@ -17,6 +17,7 @@ export function ms(input) {
 }
 
 export function getTimeSlot(date, interval = ms('15m')) {
+  date = typeof date === 'number' ? new Date(date) : date;
   const hours = date.getHours();
   const minutes = date.getMinutes();
   const seconds = date.getSeconds();
@@ -43,6 +44,7 @@ export function getTimeSlot(date, interval = ms('15m')) {
 }
 
 export function getTimeSlotTimestamp(date, interval = ms('15m')) {
+  date = typeof date === 'number' ? new Date(date) : date;
   const { start, end } = getTimeSlot(date, interval);
 
   return {

@@ -1,11 +1,11 @@
 import { render } from './render';
 import { dataset } from './dataset';
-import { ArrayStash } from '../DataStash/ArrayStash';
+import { OhlcStash } from '../DataStash/OhlcStash';
 
 const candlestick = {
   render,
   dataset,
-  DataStash: ArrayStash,
+  DataStash: OhlcStash,
 };
 
 export { candlestick };

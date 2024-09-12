@@ -1,13 +1,13 @@
 export const dataset = (chart) => {
   const data = chart.data;
 
-  const transform = (value) => {
-    const x0 = chart.axisBottom.x(value.start);
-    const y0 = chart.axisRight.y(value.open);
-    const w = chart.axisBottom.x(value.end) - x0;
-    const h = chart.axisRight.y(value.close) - y0;
+  const transform = (item) => {
+    const x0 = chart.axisBottom.x(item.start);
+    const y0 = chart.axisRight.y(item.open);
+    const w = chart.axisBottom.x(item.end) - x0;
+    const h = chart.axisRight.y(item.close) - y0;
 
-    const x = chart.axisBottom.x(value.t);
+    const x = chart.axisBottom.x(item.t);
 
     return {
       rect: [
@@ -17,8 +17,8 @@ export const dataset = (chart) => {
         h,
       ],
       line: {
-        p0: [x, chart.axisRight.y(value.low)],
-        p1: [x, chart.axisRight.y(value.high)],
+        p0: [x, chart.axisRight.y(item.low)],
+        p1: [x, chart.axisRight.y(item.high)],
       },
       color: h > 0 ? '#F6465D' : '#2DBC85',
     }

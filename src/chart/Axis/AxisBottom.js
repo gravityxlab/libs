@@ -44,8 +44,8 @@ export class AxisBottom extends Axis {
     const oldest = dataStash.oldest;
     const latest = dataStash.latest;
     const range = {
-      start: getTimeSlot(new Date(oldest[this.unit]), this.tickInterval).start,
-      end: getTimeSlot(new Date(latest[this.unit]), this.tickInterval).end
+      start: getTimeSlot(oldest[this.unit], this.tickInterval).start,
+      end: getTimeSlot(latest[this.unit], this.tickInterval).end
     };
 
     const values = [range.end];

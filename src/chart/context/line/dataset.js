@@ -2,9 +2,9 @@
 export const dataset = (chart) => {
   const data = chart.data;
 
-  const transform = (value) => ({
-    x: chart.axisBottom.x(value),
-    y: chart.axisRight.y(value),
+  const transform = (item) => ({
+    x: chart.axisBottom.x(item),
+    y: chart.axisRight.y(item),
   });
 
   return {

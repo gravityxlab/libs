@@ -2,10 +2,10 @@ import { render } from './render';
 import { dataset } from './dataset';
 import { ArrayStash } from '../DataStash/ArrayStash';
 
-const line = {
+const bar = {
   render,
   dataset,
   DataStash: ArrayStash,
 };
 
-export { line };
+export { bar };

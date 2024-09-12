@@ -1,15 +1,8 @@
-import { getTimeSlot, getTimeSlotTimestamp } from '../../../time';
-
 export class ArrayStash {
   constructor(chart, { onChange = () => {}}) {
     this.chart = chart;
-
     this.onChange = onChange;
-    this._data = new Map();
-  }
-
-  get tickIntervalUnit() {
-    return this.chart.axisBottom.tickInterval / this.chart.axisBottom.tickIntervalCount;
+    this.data = [];
   }
 
   get unit() {
@@ -19,15 +12,11 @@ export class ArrayStash {
     };
   }
 
-  get data() {
-    return [...this._data.values()];
-  }
-
   set(data) {
     for (let index = 0; index < data.length; index++) {
       this._add(data[index]);
     }
-    
+
     this.onChange(this.data);
   }
 
@@ -37,34 +26,8 @@ export class ArrayStash {
   }
 
   _add(item) {
-    const unitX = this.unit.x;
-    const unitY = this.unit.y;
-    
-    const { timestamp, start, end } = getTimeSlotTimestamp(new Date(item[unitX]), this.tickIntervalUnit);
-    let ohlc = this._data.get(timestamp);
-
-    if (!ohlc) {
-      const open = this.latest ? this.latest.close : item[unitY];
-      ohlc = {
-        t: timestamp,
-        start,
-        end,
-        open,
-        close: open,
-        low: open,
-        high: open,
-      };
-    } else {
-      if (item[unitY] < ohlc.low) {
-        ohlc.low = item[unitY];
-      } else if (item[unitY] > ohlc.high) {
-        ohlc.high = item[unitY];
-      }
-
-      ohlc.close = item[unitY];
-    }
-
-    this._data.set(timestamp, ohlc);
+    item.time = new Date(item[this.unit.x])
+    this.data.push(item);
   }
 
   get oldest() {
@@ -76,15 +39,16 @@ export class ArrayStash {
   }
 
   get helpers() {
+    const unitY = this.unit.y;
     return {
       lowHigh(data) {
         return data.reduce((acc, item) => {
-          if (acc[0] === undefined || item.low < acc[0]) {
-            acc[0] = item.low;
+          if (acc[0] === undefined || item[unitY] < acc[0]) {
+            acc[0] = item[unitY];
           }
       
-          if (acc[1] === undefined || item.high > acc[1]) {
-            acc[1] = item.high;
+          if (acc[1] === undefined || item[unitY] > acc[1]) {
+            acc[1] = item[unitY];
           }
           return acc;
         }, []);
@@ -92,4 +56,3 @@ export class ArrayStash {
     }
   }
 }
-
