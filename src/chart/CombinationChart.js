@@ -39,8 +39,7 @@ export class CombinationChart extends BaseChart {
 
   draw() {
     this.axisBottom.draw(this.dataStash);
-
-    this.grid.draw(this.axisBottom, this.axisRight);
+    this.grid.draw(this.axisBottom, this.axisRight, this.axisLeft);
 
     this.settings.yAxis.forEach(({ chart, key }) => {
       const { render, dataset } = this.settings.chart[chart.type];

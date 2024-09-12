@@ -42,10 +42,9 @@ export class Chart extends BaseChart {
 
   draw() {
     this.axisBottom.draw(this.dataStash);
-    
     this.grid.draw(this.axisBottom, this.axisRight);
     this.render(this, this.dataset, this.settings.chart._settings);
-
     this.axisRight.draw(this.data);
+
   }
 }

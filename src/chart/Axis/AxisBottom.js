@@ -36,11 +36,23 @@ export class AxisBottom extends Axis {
   }
 
   draw(dataStash) {
-    const oldest = dataStash.oldest;
-    const latest = dataStash.latest;
+    let oldest = dataStash.oldest?.[this.key];
+    let latest = dataStash.latest?.[this.key];
+    if (!oldest || !latest) {
+      const now = Date.now();
+
+      if (!oldest) {
+        oldest = now;
+      }
+
+      if (!latest) {
+        latest = now;
+      }
+
+    }
     const range = {
-      start: getTimeSlot(oldest[this.key], this.tickInterval).start,
-      end: getTimeSlot(latest[this.key], this.tickInterval).end
+      start: getTimeSlot(oldest, this.tickInterval).start,
+      end: getTimeSlot(latest, this.tickInterval).end
     };
 
     const values = [range.end];
@@ -55,8 +67,8 @@ export class AxisBottom extends Axis {
 
     this.benchmark.value = values[values.length - 2];
 
-    if (this.x(latest[this.key]) > this.benchmark.point) {
-      this.benchmark.value = latest[this.key];
+    if (this.x(latest) > this.benchmark.point) {
+      this.benchmark.value = latest;
     }
 
     this.chart.ctx.clearRect(this.left, this.top, this.width, this.height);
