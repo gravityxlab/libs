@@ -12,10 +12,10 @@ export class OhlcStash {
     return this.chart.axisBottom.tickInterval / this.chart.axisBottom.tickIntervalCount;
   }
 
-  get unit() {
+  get key() {
     return {
-      x: this.chart.axisBottom.unit,
-      y: this.chart.axisRight.unit,
+      x: this.chart.axisBottom.key,
+      y: this.chart.axisRight.key,
     };
   }
 
@@ -37,14 +37,14 @@ export class OhlcStash {
   }
 
   _add(item) {
-    const unitX = this.unit.x;
-    const unitY = this.unit.y;
+    const keyX = this.key.x;
+    const keyY = this.key.y;
     
-    const { timestamp, start, end } = getTimeSlotTimestamp(item[unitX], this.tickIntervalUnit);
+    const { timestamp, start, end } = getTimeSlotTimestamp(item[keyX], this.tickIntervalUnit);
     let ohlc = this._data.get(timestamp);
 
     if (!ohlc) {
-      const open = this.latest ? this.latest.close : item[unitY];
+      const open = this.latest ? this.latest.close : item[keyY];
       ohlc = {
         t: timestamp,
         start,
@@ -55,13 +55,13 @@ export class OhlcStash {
         high: open,
       };
     } else {
-      if (item[unitY] < ohlc.low) {
-        ohlc.low = item[unitY];
-      } else if (item[unitY] > ohlc.high) {
-        ohlc.high = item[unitY];
+      if (item[keyY] < ohlc.low) {
+        ohlc.low = item[keyY];
+      } else if (item[keyY] > ohlc.high) {
+        ohlc.high = item[keyY];
       }
 
-      ohlc.close = item[unitY];
+      ohlc.close = item[keyY];
     }
 
     this._data.set(timestamp, ohlc);

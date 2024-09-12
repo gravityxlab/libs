@@ -5,7 +5,6 @@
   "license": "MIT",
   "description": "To make it easier for GravityX Lab to share and consume our own JavaScript.",
   "main": "src/index.js",
-  "types": "src/index.d.ts", 
   "files": [
     "src/",
     "README.md"

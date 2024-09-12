@@ -6,7 +6,8 @@ import {
   format,
   bar,
   line,
-  candlestick
+  candlestick,
+  combination,
 } from '../../../src';
 import './index.css';
 
@@ -28,28 +29,30 @@ Array.from(document.getElementsByTagName('button')).forEach((button) => {
 
 const settings = {
   'time': { 
-    type: line,
+    chart: line.settings({
+      gradient: true,
+    }),
     xAxis: {
-      unit: 't',
+      key: 't',
       interval: ms('15m'),
       tickIntervalCount: 8,
       label: (value) => format(value, 'HH:mm'),
     },
     yAxis: {
-      unit: 'usd',
+      key: 'usd',
+      unit: 'USD',
     },
-    gradient: true
   },
   '2h'  : {
-    type: candlestick,
+    chart: candlestick,
     xAxis: {
-      unit: 't',
+      key: 't',
       interval: ms('24h'),
       tickIntervalCount: 12,
       label: (value) => format(value, 'MM/DD'),
     },
     yAxis: {
-      unit: 'usd',
+      key: 'usd',
     },
   },
 };
@@ -69,20 +72,47 @@ const chart = new Chart(
   settings[interval] || settings.time
 );
 
-const chart1 = new Chart(
+const chart1 = new CombinationChart(
   canvas1.getContext('2d'), 
   {
-    type: bar,
-    color: '#F6465D',
+    chart: combination(bar, line),
+    axisRight: {
+      range: [0, 6000],
+      key: 'usd',
+      unit: 'USD'
+    },
+    axisLeft: {
+      range: [0, 100],
+      keys: ['cpu', 'memory'],
+      unit: '%',
+    },
     xAxis: {
-      unit: 't',
+      key: 't',
       interval: ms('6m'),
       tickIntervalCount: 12,
       label: (value) => format(value, 'HH:mm'),
     },
-    yAxis: {
-      unit: 'usd',
-    },
+    yAxis: [
+      {
+        chart: bar.settings({
+          color: '#F6465D'
+        }),
+        key: 'usd',
+      },
+      {
+        chart: line.settings({
+          color: '#2DBC85',
+          lineWidth: 2,
+        }),
+        key: 'cpu',
+      },
+      {
+        chart: line.settings({
+          lineWidth: 2,
+        }),
+        key: 'memory',
+      }
+    ],
   }
 );
 

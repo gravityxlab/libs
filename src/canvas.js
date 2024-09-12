@@ -1,4 +1,4 @@
-const defaultTextSettings = { 
+const DEFAULT_SETTINGS = { 
   textAlign: 'center',
   textBaseline: 'middle',
   font: '11px Arial',
@@ -7,16 +7,16 @@ const defaultTextSettings = {
 export function text(
   ctx,
   { 
-    textAlign = defaultTextSettings.textAlign,
-    textBaseline = defaultTextSettings.textBaseline,
-    font = defaultTextSettings.font,
-    fillStyle = defaultTextSettings.fillStyle,
-  } = defaultTextSettings) {
+    textAlign = DEFAULT_SETTINGS.textAlign,
+    textBaseline =DEFAULT_SETTINGS.textBaseline,
+    font =DEFAULT_SETTINGS.font,
+    fillStyle = DEFAULT_SETTINGS.fillStyle,
+  } = DEFAULT_SETTINGS) {
     return (text, x, y) => {
       ctx.textAlign = textAlign;
       ctx.textBaseline = textBaseline;
       ctx.font = font;
       ctx.fillStyle = fillStyle;
       ctx.fillText(text, x, y);
-    }
+    };
 }

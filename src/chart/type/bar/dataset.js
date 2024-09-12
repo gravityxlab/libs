@@ -1,20 +1,19 @@
 import { getTimeSlotTimestamp } from '../../../time';
 
-export const dataset = (chart) => {
+export const dataset = (chart, key, transform) => {
   const data = chart.data;
 
-  const transform = (item) => {
+  const transformData = (item) => {
     const {
       xAxis: xAxisSettings,
-      yAxis: yAxisSettings,
       xAxis: { interval, tickIntervalCount }
     } = chart.settings;
-    const value = item[yAxisSettings.unit];
-    const { start, end } = getTimeSlotTimestamp(value.time || item[xAxisSettings.unit], interval / tickIntervalCount);
+    const value = item[key];
+    const { start, end } = getTimeSlotTimestamp(value.time || item[xAxisSettings.key], interval / tickIntervalCount);
     
-    const x = chart.axisBottom.x(start);
-    const h = chart.axisRight.y(value);
-    const dx = chart.axisBottom.x(end) - x;
+    const x = transform.x(start);
+    const h = transform.y(value);
+    const dx = transform.x(end) - x;
     const dy = chart.innerHeight - h
 
     return [
@@ -27,10 +26,10 @@ export const dataset = (chart) => {
 
   return {
     get start() {
-      return transform(data[0]);
+      return transformData(data[0]);
     },
     get end() {
-      return transform(data[data.length - 1]);
+      return transformData(data[data.length - 1]);
     },
     [Symbol.iterator]() {
       let i = 0;
@@ -41,7 +40,7 @@ export const dataset = (chart) => {
           if (!item) return { done: true, value: null };
           return { 
             done: false,
-            value: transform(item)
+            value: transformData(item)
           };
         }
       };

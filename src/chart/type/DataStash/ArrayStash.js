@@ -5,10 +5,10 @@ export class ArrayStash {
     this.data = [];
   }
 
-  get unit() {
+  get key() {
     return {
-      x: this.chart.axisBottom.unit,
-      y: this.chart.axisRight.unit,
+      x: this.chart.axisBottom.key,
+      y: this.chart.axisRight.key,
     };
   }
 
@@ -26,7 +26,7 @@ export class ArrayStash {
   }
 
   _add(item) {
-    item.time = new Date(item[this.unit.x])
+    item.time = new Date(item[this.key.x])
     this.data.push(item);
   }
 
@@ -39,16 +39,16 @@ export class ArrayStash {
   }
 
   get helpers() {
-    const unitY = this.unit.y;
+    const keyY = this.key.y;
     return {
       lowHigh(data) {
         return data.reduce((acc, item) => {
-          if (acc[0] === undefined || item[unitY] < acc[0]) {
-            acc[0] = item[unitY];
+          if (acc[0] === undefined || item[keyY] < acc[0]) {
+            acc[0] = item[keyY];
           }
       
-          if (acc[1] === undefined || item[unitY] > acc[1]) {
-            acc[1] = item[unitY];
+          if (acc[1] === undefined || item[keyY] > acc[1]) {
+            acc[1] = item[keyY];
           }
           return acc;
         }, []);

@@ -3,12 +3,12 @@ import { ms, format, getTimeSlot } from '../../time';
 import { text } from '../../canvas';
 
 export class AxisBottom extends Axis {
-  constructor(chart) {
-    super(chart, chart.settings.xAxis.unit);
+  constructor(chart, settings) {
+    super('axis_bottom', chart, settings);
 
     this.left = 0;
     this.height = this.chart.padding.bottom;
-    this.top = this.chart.innerHeight;
+    this.top = this.chart.innerHeight - 1;
     this.width = this.chart.width;
 
     this.benchmark = {
@@ -16,14 +16,9 @@ export class AxisBottom extends Axis {
       value: null,
     };
 
-    this.chart.ctx.beginPath();
-    this.chart.ctx.strokeStyle = '#2B3139';
-    this.chart.ctx.lineWidth = 1;
-    this.chart.ctx.moveTo(this.left, this.top);
-    this.chart.ctx.lineTo(this.width, this.top);
-    this.chart.ctx.stroke();
-    this.tickInterval = this.chart.settings.xAxis.interval || ms('15m');
-    this.tickIntervalCount = this.chart.settings.xAxis.tickIntervalCount;
+    
+    this.tickInterval = settings.interval || ms('15m');
+    this.tickIntervalCount = settings.tickIntervalCount;
     this.tickSizeUnit = 6;
     this.tickCount = Math.ceil(this.chart.innerWidth / (this.tickIntervalCount * this.tickSizeUnit));
     this.tickSize = this.tickIntervalCount * this.tickSizeUnit;
@@ -32,7 +27,7 @@ export class AxisBottom extends Axis {
   }
 
   x(value) {
-    value = typeof value === 'object' ? value[this.unit] : value;
+    // value = typeof value === 'object' ? value[this.key] : value;
     return this.benchmark.point + ((value - this.benchmark.value) / this.tickInterval) * this.tickSize;
   }
 
@@ -44,8 +39,8 @@ export class AxisBottom extends Axis {
     const oldest = dataStash.oldest;
     const latest = dataStash.latest;
     const range = {
-      start: getTimeSlot(oldest[this.unit], this.tickInterval).start,
-      end: getTimeSlot(latest[this.unit], this.tickInterval).end
+      start: getTimeSlot(oldest[this.key], this.tickInterval).start,
+      end: getTimeSlot(latest[this.key], this.tickInterval).end
     };
 
     const values = [range.end];
@@ -60,11 +55,18 @@ export class AxisBottom extends Axis {
 
     this.benchmark.value = values[values.length - 2];
 
-    if (this.x(latest[this.unit]) > this.benchmark.point) {
-      this.benchmark.value = latest[this.unit];
+    if (this.x(latest[this.key]) > this.benchmark.point) {
+      this.benchmark.value = latest[this.key];
     }
 
     this.chart.ctx.clearRect(this.left, this.top, this.width, this.height);
+
+    this.chart.ctx.beginPath();
+    this.chart.ctx.strokeStyle = '#2B3139';
+    this.chart.ctx.lineWidth = 1;
+    this.chart.ctx.moveTo(this.left, this.top);
+    this.chart.ctx.lineTo(this.width, this.top);
+    this.chart.ctx.stroke();
 
     this.ticks = values.map((value) => {
       const date = new Date(value);

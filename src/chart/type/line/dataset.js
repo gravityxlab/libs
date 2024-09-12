@@ -1,18 +1,22 @@
 
-export const dataset = (chart) => {
+export const dataset = (chart, key, transform) => {
+  const {
+    xAxis: xAxisSettings,
+  } = chart.settings;
+
   const data = chart.data;
 
-  const transform = (item) => ({
-    x: chart.axisBottom.x(item),
-    y: chart.axisRight.y(item),
+  const transformData = (item) => ({
+    x: transform.x(item.time || item[xAxisSettings.key]),
+    y: transform.y(item[key]),
   });
 
   return {
     get start() {
-      return transform(data[0]);
+      return transformData(data[0]);
     },
     get end() {
-      return transform(data[data.length - 1]);
+      return transformData(data[data.length - 1]);
     },
     [Symbol.iterator]() {
       let i = 0;
@@ -24,10 +28,11 @@ export const dataset = (chart) => {
           return { 
             done: false,
             value: {
-              current: transform(item),
+              current: transformData(item),
               next: () => {
                 const nextPoint = data[i];
-                return transform(nextPoint);
+                if (!nextPoint) return null;
+                return transformData(nextPoint);
               } 
             }
           };

@@ -9,19 +9,19 @@ export class BaseChart {
 
   get padding() {
     return this.settings.padding || {
-      top: 0,
+      top: 30,
       bottom: 40,
-      left: 0,
-      right: 70,
+      left: 50,
+      right: 50,
     };
   }
 
   get innerHeight() {
-    return this.height - this.padding.top - this.padding.bottom;
+    return this.height - this.padding.bottom;
   }
 
   get innerWidth() {
-    return this.width - this.padding.left - this.padding.right;
+    return this.width - this.padding.right;
   }
 }
 

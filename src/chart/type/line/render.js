@@ -41,6 +41,7 @@ export const render = (chart, dataset, settings = {}) => {
 
   chart.ctx.beginPath();
   for (const point of dataset) {
+
     const next = point.next();
     if (next) {
       chart.ctx.moveTo(point.current.x, point.current.y);

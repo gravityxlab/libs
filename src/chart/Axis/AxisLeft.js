@@ -1,15 +1,15 @@
 import { AxisVertical } from './AxisVertical';
 import { text } from '../../canvas';
 
-export class AxisRight extends AxisVertical {
+export class AxisLeft extends AxisVertical {
   constructor(chart, settings) {
     const bounds = {
       top: 0,
-      width: chart.padding.right,
-      left: chart.width - chart.padding.right,
+      width: chart.padding.left,
+      left: 0,
       height: chart.height,
     };
 
-    super('axis_right', chart, bounds, settings);
+    super('axis_left', chart, bounds, settings);
   }
 }
