@@ -5,16 +5,16 @@ export const dataset = (chart, key, transform) => {
 
   const transformData = (item) => {
     const {
-      xAxis: xAxisSettings,
-      xAxis: { interval, tickIntervalCount }
+      axisBottom: axisBottomSettings,
+      axisBottom: { interval, tickIntervalCount }
     } = chart.settings;
     const value = item[key];
-    const { start, end } = getTimeSlotTimestamp(value.time || item[xAxisSettings.key], interval / tickIntervalCount);
+    const { start, end } = getTimeSlotTimestamp(value._time || item[axisBottomSettings.key], interval / tickIntervalCount);
     
     const x = transform.x(start);
     const h = transform.y(value);
     const dx = transform.x(end) - x;
-    const dy = chart.innerHeight - h
+    const dy = chart.innerBottom - h
 
     return [
       x,

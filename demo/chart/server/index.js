@@ -29,13 +29,19 @@ if (process.env.NODE_ENV === 'development') {
 const db = { 
   data: [
     {
-      "t": 1725525000001,
+      "time": 1725525000001,
       "usd": 2411.32,
       "cpu": 50,
       "memory": 40,
     },
     {
-      "t": 1725525090001,
+      "time": 1725525090001,
+      "usd": 2415.32,
+      "cpu": 50,
+      "memory": 40,
+    },
+    {
+      "time": 1725530090001,
       "usd": 2415.32,
       "cpu": 50,
       "memory": 40,
@@ -52,7 +58,7 @@ const sendPrice = () => {
   const previous = db.data[db.data.length - 1];
 
   const latest = {
-    t: previous.t + 30_000,
+    time: previous.time + 30_000,
     usd: previous.usd + Math.floor(Math.random() * 21) - 10,
     cpu: Math.max(Math.min(previous.cpu + Math.floor(Math.random() * 5) - 2, 100), 40),
     memory: Math.max(Math.min(previous.memory + Math.floor(Math.random() * 5) - 2, 100), 40),

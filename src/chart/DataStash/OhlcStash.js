@@ -1,4 +1,4 @@
-import { getTimeSlot, getTimeSlotTimestamp } from '../../../time';
+import { getTimeSlot, getTimeSlotTimestamp } from '../../time';
 
 export class OhlcStash {
   constructor(chart, { onChange = () => {}}) {
@@ -23,20 +23,17 @@ export class OhlcStash {
     return [...this._data.values()];
   }
 
-  set(data) {
+  add(data) {
+    data = Array.isArray(data) ? data : [data];
+
     for (let index = 0; index < data.length; index++) {
-      this._add(data[index]);
+      this.format(data[index]);
     }
-    
+
     this.onChange(this.data);
   }
 
-  add(item) {
-    this._add(item);
-    this.onChange(this.data);
-  }
-
-  _add(item) {
+  format(item) {
     const keyX = this.key.x;
     const keyY = this.key.y;
     
@@ -46,7 +43,7 @@ export class OhlcStash {
     if (!ohlc) {
       const open = this.latest ? this.latest.close : item[keyY];
       ohlc = {
-        t: timestamp,
+        _time: timestamp,
         start,
         end,
         open,
@@ -64,7 +61,7 @@ export class OhlcStash {
       ohlc.close = item[keyY];
     }
 
-    this._data.set(timestamp, ohlc);
+    this._data.set(ohlc._time, ohlc);
   }
 
   get oldest() {

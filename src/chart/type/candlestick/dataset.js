@@ -7,7 +7,7 @@ export const dataset = (chart, _, transform) => {
     const w = transform.x(item.end) - x0;
     const h = transform.y(item.close) - y0;
 
-    const x = transform.x(item.t);
+    const x = transform.x(item._time);
 
     return {
       rect: [

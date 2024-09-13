@@ -4,10 +4,10 @@ import { text } from '../../canvas';
 export class AxisLeft extends AxisVertical {
   constructor(chart, settings) {
     const bounds = {
-      top: 0,
-      width: chart.padding.left,
-      left: 0,
-      height: chart.height,
+      top: chart.padding.top,
+      width: settings.width,
+      left: chart.padding.left,
+      height: chart.height - chart.padding.bottom,
     };
 
     super('axis_left', chart, bounds, settings);

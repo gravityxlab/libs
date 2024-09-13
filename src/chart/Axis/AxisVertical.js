@@ -11,7 +11,7 @@ export class AxisVertical extends Axis {
     this.height = bounds.height;
 
     this.benchmark = {
-      point: this.chart.innerHeight - 10,
+      point: this.chart.innerBottom - 10,
       value: null,
     };
 
@@ -19,11 +19,14 @@ export class AxisVertical extends Axis {
   }
 
   get tickSize() {
-    return Math.abs(Math.floor((this.benchmark.point - this.chart.padding.top) / 4));
+    return Math.abs(Math.floor((this.benchmark.point - this.top - 24) / 4));
   }
 
   y(value) {
-    return this.benchmark.point + ((this.benchmark.value - value) / this.tickInterval) * this.tickSize;
+    return Math.min(
+      this.benchmark.point + ((this.benchmark.value - value) / this.tickInterval) * this.tickSize,
+      this.chart.innerBottom - 1,
+    );
   }
 
   draw(data) {
@@ -37,12 +40,12 @@ export class AxisVertical extends Axis {
     this.chart.ctx.beginPath();
     this.chart.ctx.strokeStyle = '#2B3139';
     this.chart.ctx.lineWidth = 1;
-    if (this.type === 'axis_right') {
-      this.chart.ctx.moveTo(this.left, this.top);
-      this.chart.ctx.lineTo(this.left, this.height);
-    } else {
+    if (this.type === 'axis_left') {
       this.chart.ctx.moveTo(this.left + this.width, this.top);
       this.chart.ctx.lineTo(this.left + this.width, this.height);
+    } else {
+      this.chart.ctx.moveTo(this.left, this.top);
+      this.chart.ctx.lineTo(this.left, this.height);
     }
 
     if (low !== 0) {
@@ -53,10 +56,10 @@ export class AxisVertical extends Axis {
     this.chart.ctx.stroke();
 
     if (this.settings.unit) {
-      text(this.chart.ctx)(
+      text(this.chart.ctx, { fillStyle: this.chart.theme.text })(
         `(${this.settings.unit})`,
         this.left + this.width / 2,
-        10,
+        this.top + 10,
       );
     }
 
@@ -71,18 +74,26 @@ export class AxisVertical extends Axis {
 
     const ticks = [];
 
+    let x
+    if (this.type === 'axis_left') {
+      x = this.chart.padding.left + this.width / 2;
+    } else {
+      x =  this.left + this.width / 2
+    }
+
     for (let index = 0; index < 5; index++) {
       const value = low + this.tickInterval * index;
+
       const tick = {
         label: value,
         value,
-        x: this.left + this.width / 2,
+        x,
         y: this.y(value),
       };
 
       ticks.push(tick);
 
-      text(this.chart.ctx)(tick.label, tick.x, tick.y);   
+      text(this.chart.ctx, { fillStyle: this.chart.theme.text })(tick.label, tick.x, tick.y);   
     }
 
     this.ticks = ticks;

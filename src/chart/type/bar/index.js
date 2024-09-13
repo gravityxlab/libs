@@ -1,19 +1,23 @@
 import { render } from './render';
 import { dataset } from './dataset';
-import { ArrayStash } from '../DataStash/ArrayStash';
+import { ArrayStash } from '../../DataStash/ArrayStash';
 
-const bar = {
-  _settings: {},
-  type: 'bar',
-  render,
-  dataset,
-  DataStash: ArrayStash,
-  settings(settings) {
-    return {
-      ...this,
-      _settings: settings,
-    };
+class Bar {
+  constructor() {
+    this._settings = {};
+    this.type = 'bar';
+    this.render = render;
+    this.dataset = dataset;
+    this.DataStash = ArrayStash;
   }
-};
+
+  settings(settings) {
+    const bar = new Bar();
+    bar._settings = settings;
+    return bar;
+  }
+}
+
+const bar = new Bar();
 
 export { bar };

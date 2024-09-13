@@ -6,13 +6,13 @@ export class AxisBottom extends Axis {
   constructor(chart, settings) {
     super('axis_bottom', chart, settings);
 
-    this.left = 0;
-    this.height = this.chart.padding.bottom;
-    this.top = this.chart.innerHeight - 1;
-    this.width = this.chart.width;
+    this.left = this.chart.innerLeft;
+    this.height = this.settings.height;
+    this.top = this.chart.innerBottom;
+    this.width = this.chart.innerLeft + this.chart.innerWidth;
 
     this.benchmark = {
-      point: this.chart.innerWidth - 20,
+      point: this.chart.innerLeft + this.chart.innerWidth - 20,
       value: null,
     };
 
@@ -27,8 +27,7 @@ export class AxisBottom extends Axis {
   }
 
   x(value) {
-    // value = typeof value === 'object' ? value[this.key] : value;
-    return this.benchmark.point + ((value - this.benchmark.value) / this.tickInterval) * this.tickSize;
+    return (this.benchmark.point) + ((value - this.benchmark.value) / this.tickInterval) * this.tickSize;
   }
 
   value(x) {
@@ -36,6 +35,8 @@ export class AxisBottom extends Axis {
   }
 
   draw(dataStash) {
+    this.chart.ctx.clearRect(this.left, this.top, this.width, this.height);
+
     let oldest = dataStash.oldest?.[this.key];
     let latest = dataStash.latest?.[this.key];
     if (!oldest || !latest) {
@@ -59,7 +60,7 @@ export class AxisBottom extends Axis {
 
     while (values[0] - this.tickInterval >= range.start && values.length <= this.tickCount) {
       values.unshift(values[0] - this.tickInterval);
-    };
+    }
 
     while (values.length <= this.tickCount) {
       values.push(values[values.length - 1] + this.tickInterval);
@@ -71,8 +72,6 @@ export class AxisBottom extends Axis {
       this.benchmark.value = latest;
     }
 
-    this.chart.ctx.clearRect(this.left, this.top, this.width, this.height);
-
     this.chart.ctx.beginPath();
     this.chart.ctx.strokeStyle = '#2B3139';
     this.chart.ctx.lineWidth = 1;
@@ -83,15 +82,15 @@ export class AxisBottom extends Axis {
     this.ticks = values.map((value) => {
       const date = new Date(value);
       return {
-        label: this.chart.settings.xAxis.label(date),
+        label: this.settings.label(date),
         value: date.getTime(),
         x: this.x(value),
-        y: this.top + 20,
+        y: this.top + (this.height / 2),
       };
     });
 
     this.ticks.forEach((tick) => {
-      text(this.chart.ctx)(tick.label, tick.x, tick.y);
+      text(this.chart.ctx, { fillStyle: this.chart.theme.text })(tick.label, tick.x, tick.y);
     });
   }
 }

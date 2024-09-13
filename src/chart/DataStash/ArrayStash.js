@@ -2,7 +2,7 @@ export class ArrayStash {
   constructor(chart, { onChange = () => {}}) {
     this.chart = chart;
     this.onChange = onChange;
-    this.data = [];
+    this._data = new Map();
   }
 
   get key() {
@@ -12,22 +12,20 @@ export class ArrayStash {
     };
   }
 
-  set(data) {
+  get data() {
+    return [...this._data.values()];
+  }
+
+  add(data) {
+    data = Array.isArray(data) ? data : [data];
+
     for (let index = 0; index < data.length; index++) {
-      this._add(data[index]);
+      const item = data[index];
+      item._time = new Date(item[this.key.x])
+      this._data.set(item[this.key.x], item);
     }
 
     this.onChange(this.data);
-  }
-
-  add(item) {
-    this._add(item);
-    this.onChange(this.data);
-  }
-
-  _add(item) {
-    item.time = new Date(item[this.key.x])
-    this.data.push(item);
   }
 
   get oldest() {

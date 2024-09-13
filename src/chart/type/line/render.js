@@ -2,7 +2,7 @@
 const DEFAULT_SETTINGS = { gradient: true, color: '#FCD435', lineWidth: 1 };
 
 const gradient = (chart, dataset, color) => {
-  const gradient = chart.ctx.createLinearGradient(0, 0, 0, chart.innerHeight);
+  const gradient = chart.ctx.createLinearGradient(0, 0, 0, chart.innerBottom);
   gradient.addColorStop(0, color);
   gradient.addColorStop(1, `${color}00`);
 
@@ -18,8 +18,8 @@ const gradient = (chart, dataset, color) => {
     }
   }
 
-  chart.ctx.lineTo(dataset.end.x, chart.innerHeight);
-  chart.ctx.lineTo(dataset.start.x, chart.innerHeight);
+  chart.ctx.lineTo(dataset.end.x, chart.innerBottom);
+  chart.ctx.lineTo(dataset.start.x, chart.innerBottom);
 
   chart.ctx.closePath();
 
