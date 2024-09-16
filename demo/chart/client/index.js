@@ -1,12 +1,14 @@
 import io from 'socket.io-client';
 import {
   Chart,
-  ms,
-  format,
   bar,
   line,
   candlestick,
-} from '../../../src';
+} from '../../../packages/chart';
+import {
+  ms,
+  format,
+} from '../../../packages/time';
 import './index.css';
 
 const search = new URLSearchParams(window.location.search);
@@ -86,7 +88,7 @@ const chart1 = new Chart(
     },
     axisRight: {
       range: [0, 6000],
-      key: 'socket_count',
+      key: 'usd',
       unit: 'USD',
       width: 40,
     },
@@ -98,7 +100,7 @@ const chart1 = new Chart(
     },
     axisBottom: {
       key: 'time',
-      interval: 12 * ms('5s'),
+      interval: 12 * ms('5m'),
       tickIntervalCount: 12,
       height: 16,
       label: (value) => format(value, 'HH:mm'),
@@ -108,7 +110,7 @@ const chart1 = new Chart(
         chart: bar.settings({
           color: '#F6465D'
         }),
-        key: 'socket_count',
+        key: 'usd',
       },
       {
         chart: line.settings({
@@ -134,8 +136,8 @@ const socket = io('http://localhost:3000', {
 });
 
 socket.on('eth:price-history', (data) => {
-  // chart.dataStash.add(data);
-  // chart1.dataStash.add(data);
+  chart.dataStash.add(data);
+  chart1.dataStash.add(data);
   
   const previous = data[data.length - 2];
   const latest = data[data.length - 1];
@@ -145,16 +147,10 @@ socket.on('eth:price-history', (data) => {
 });
 
 socket.on('eth:price', (data) => {
-  // chart.dataStash.add(data.latest);
-  // chart1.dataStash.add(data.latest);
+  chart.dataStash.add(data.latest);
+  chart1.dataStash.add(data.latest);
   $price.innerText = data.latest.usd;
   $price.style.color = data.latest.usd > data.previous.usd ? '#F6465D' : '#2DBC85';
 });
 
 chart1.draw();
-
-fetch('http://localhost:3002/system/usage?start_line_index=800')
-  .then(res => res.json())
-  .then((json) => {
-    chart1.dataStash.add(json.data);
-  });
