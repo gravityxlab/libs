@@ -8,5 +8,11 @@
   "files": [
     "packages/",
     "README.md"
-  ]
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
 }
