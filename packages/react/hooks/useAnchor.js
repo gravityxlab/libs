@@ -1,29 +1,39 @@
 import { useCallback, useMemo, useState } from 'react';
 
-const defaultUseAnchorOptions = {
+const DEFAULT = {
   clickAwayListener: false,
+  stopEvent: false,
+  identity: null,
 };
 
-function useAnchor({ clickAwayListener = false, identity = null } = defaultUseAnchorOptions) {
+function useAnchor({
+  clickAwayListener = DEFAULT.clickAwayListener,
+  stopEvent = DEFAULT.stopEvent,
+  identity = DEFAULT.identity,
+} = DEFAULT) {
   const [context, setContext] = useState({});
   const [anchor, setAnchor] = useState(null); // HTMLElement | boolean | null
 
   const close = useCallback((event) => {
-    event?.preventDefault();
-    event?.stopPropagation();
+    if (stopEvent) {
+      event?.preventDefault();
+      event?.stopPropagation();
+    }
 
     setContext({});
 
     setAnchor(null);
 
     if (clickAwayListener) {
-      window.removeEventListener('click', close);
+      window.removeEventListener('click', close, false);
     }
   }, []);
 
   const open = useCallback((event, context) => {
-    event?.preventDefault();
-    event?.stopPropagation();
+    if (stopEvent) {
+      event?.preventDefault();
+      event?.stopPropagation();
+    }
 
     if (context) {
       setContext(context);
@@ -38,7 +48,9 @@ function useAnchor({ clickAwayListener = false, identity = null } = defaultUseAn
     }
 
     if (clickAwayListener) {
-      window.addEventListener('click', close);
+      setTimeout(() => {
+        window.addEventListener('click', close, false);
+      }, 0);
     }
   }, []);
 
