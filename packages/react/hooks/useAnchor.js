@@ -1,14 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
-const defaultProps = {
+const defaultUseAnchorOptions = {
   clickAwayListener: false,
 };
 
-function useAnchor({ clickAwayListener = false } = defaultProps) {
-  const [anchor, setAnchor] = useState(null);
+function useAnchor({ clickAwayListener = false, identity = null } = defaultUseAnchorOptions) {
+  const [context, setContext] = useState({});
+  const [anchor, setAnchor] = useState(null); // HTMLElement | boolean | null
+
   const close = useCallback((event) => {
-    event.preventDefault();
-    event.stopPropagation();
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    setContext({});
 
     setAnchor(null);
 
@@ -17,11 +21,21 @@ function useAnchor({ clickAwayListener = false } = defaultProps) {
     }
   }, []);
 
-  const open = useCallback((event) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const open = useCallback((event, context) => {
+    event?.preventDefault();
+    event?.stopPropagation();
 
-    setAnchor(event);
+    if (context) {
+      setContext(context);
+    }
+
+    if (!event) {
+      setAnchor(true);
+    } else if (identity) {
+      setAnchor(event.target.closest(`[${identity}]`) || event.target);
+    } else {
+      setAnchor(event.target);
+    }
 
     if (clickAwayListener) {
       window.addEventListener('click', close);
@@ -36,9 +50,20 @@ function useAnchor({ clickAwayListener = false } = defaultProps) {
     }
   };
 
+  const bounds = useMemo(() => {
+    if (typeof anchor === 'boolean' || anchor === null) {
+      return null;
+    }
+
+    return anchor.getBoundingClientRect();
+  }, [anchor]);
+
   return {
-    open: Boolean(anchor),
+    show: Boolean(anchor),
+    bounds,
+    context,
     toggle,
+    open,
     close,
   };
 }

@@ -4,9 +4,19 @@
   "private": true,
   "license": "MIT",
   "description": "To make it easier for GravityX Lab to share and consume our own JavaScript.",
-  "main": "./packages/index.js",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "type": "module",
   "files": [
+    "index.js",
+    "index.d.ts",
     "packages/",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "react": "^19.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
 }
